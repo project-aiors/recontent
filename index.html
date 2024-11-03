@@ -1,0 +1,80 @@
+<!-- home.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="keywords" content="personalized recommendations, movies, songs, books, recontent">
+    <meta name="description" content="Get personalized recommendations for movies, songs, and books at recontent. No more endless scrolling!">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- styles -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/home.css">
+
+    <!-- scripts -->
+    <script src="scripts/config.js" defer></script>
+    <script src="scripts/home.js" defer></script>
+    <script src="scripts/main.js" defer></script>
+    <script defer>
+        document.addEventListener("DOMContentLoaded", () => {
+            updateFavoritesList();
+        });
+    </script>
+
+    <link rel="icon" href="./assets/logo.ico" type="image/x-icon">
+    <title>recontent</title>
+</head>
+
+<body>
+    <div class="video-background">
+        <video autoplay muted loop>
+            <source src="assets/bg_vid.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <div id="header-wrap">
+        <div class="header">
+            <div class="header-logo-container">
+                <img src="assets/logo.ico" class="header-app-logo">
+                <div class="header-app-name">recontent</div>
+            </div>
+            <div class="header-right-icons-wrap">
+                <img id="theme-toggle" class="header-right-icons clickable-no-filter" onclick="toggleTheme()">
+                <img id="header-menu" src="assets/fav.svg" class="header-right-icons clickable-no-filter" onclick="showAndHideUserBox()">
+            </div>
+        </div>
+        <div id="user-box" class="hideUserBox">
+            <h3>Your favorite list:</h3>
+            <div id="favorite-list"></div>
+        </div>
+    </div>
+
+    <div id="home-intro">
+        <h1 class="home-intro-tagline">Because you deserve better than random!</h1>
+        <h2 id="scroll-trigger" style="font-weight: 400;">
+            Forget endless scrolling. Get personalized, hand-picked movies, music, books and anything based on what you
+            actually love, right here.
+        </h2>
+        <button id="scrollDown" class="scroll-button clickable">↓</button>
+    </div>
+    <div id="home-options">
+        <h1>Categories</h1>
+        <div class="home-options-wrap">
+            <div class="card clickable" onclick="window.location.href='search.html'">
+                <img src="assets/movie.svg">
+                <div>Movies</div>
+            </div>
+            <div class="card clickable">
+                <img src="assets/song.svg">
+                <div>Songs</div>
+            </div>
+            <div class="card clickable">
+                <img src="assets/book.svg">
+                <div>Books</div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
