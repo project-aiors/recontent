@@ -82,18 +82,67 @@
     #responseArea {
       margin-top: 30px;
       margin-bottom: 35px;
-      /* background: white; */
-      padding: 20px 35px;
+      padding: 20px;
       border-radius: 10px;
-      /* box-shadow: 0 2px 8px rgba(0,0,0,0.1); */
       width: 100%;
       font-size: 16px;
       line-height: 1.5;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+      box-sizing: border-box;
     }
 
-    #responseArea p {
-      margin-top: 0.4em;
-      margin-bottom: 0.4em;
+    .recommendations-grid {
+      column-count: 2;
+      column-gap: 30px;
+      width: 100%;
+      padding: 0;
+    }
+
+    .recommendation-box {
+      background-color: var(--background-2nd);
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease;
+      break-inside: avoid; /* Prevent cards from breaking across columns */
+      margin-bottom: 30px; /* Space between cards */
+      width: 100%;
+      box-sizing: border-box;
+      display: inline-block; /* Important for column layout */
+    }
+
+    .recommendation-box:last-child {
+      margin-bottom: 0; /* Remove margin from last card */
+    }
+
+    .recommendation-box:hover {
+      transform: translateY(-2px);
+    }
+
+    .recommendation-title {
+      font-size: 1.1em;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: var(--text);
+      border-bottom: 1px solid var(--text);
+      padding-bottom: 4px;
+    }
+
+    .recommendation-details {
+      font-size: 0.85em;
+      color: var(--text);
+      opacity: 0.9;
+    }
+
+    .recommendation-details ul {
+      margin: 4px 0;
+      padding-left: 16px;
+    }
+
+    .recommendation-details li {
+      margin: 2px 0;
     }
 
     .travel-header {
@@ -154,6 +203,16 @@
       color: #5f6368;
       font-size: 1.1em;
     }
+
+    @media (max-width: 900px) {
+      .recommendations-grid {
+        column-count: 1;
+        column-gap: 20px;
+      }
+      .recommendation-box {
+        margin-bottom: 20px;
+      }
+    }
   </style>
   <link rel="stylesheet" href="../../styles/main.css">
 </head>
@@ -208,16 +267,18 @@
         ],
         apiKey: "AIzaSyBYZpDg5u9C2fb4hzAX-xiVkOMRx92eG0Y",
         systemPrompt: `You are a knowledgeable travel planning assistant. When responding to travel queries:
-1. Consider the user's budget, time constraints, and preferences
-2. Provide specific destination recommendations with reasoning
-3. Include practical information about weather, best times to visit, and local customs
-4. Suggest a rough itinerary if requested
-5. Mention any important travel requirements (visas, vaccinations, etc.)
-6. Include estimated costs for major expenses
-7. Consider seasonal factors and current travel conditions
-8. Provide safety tips and local insights
-9. If the prompt is not related to and for travel planning then just respond "Please provide your travel preferences only!"
-Format your response in clear sections with markdown and do not include any other text or comments than the response.`
+1. Provide 8-12 specific destination recommendations
+2. For each recommendation, structure your response EXACTLY as follows (use ### for each destination):
+   ### Destination Name
+   - Location: [region/country]
+   - Best Time: [season/months]
+   - Budget: [price range]
+   - Highlights: [2-3 key attractions]
+3. Keep each point to one line
+4. Be extremely concise
+5. Do not include any other headings or sections
+6. If the prompt is not related to travel planning, respond with "Please provide your travel preferences only!"
+Format your response in markdown with ### for each destination name.`
       },
       fitness: {
         title: "Fitness & Workout Planner",
@@ -230,16 +291,18 @@ Format your response in clear sections with markdown and do not include any othe
         ],
         apiKey: "AIzaSyDFvEylgsGMwOpi0ySgth4-SimrS3J1IM8",
         systemPrompt: `You are a knowledgeable fitness and workout planning assistant. When responding to fitness queries:
-1. Consider the user's fitness level, goals, and available equipment
-2. Provide specific workout recommendations with proper form guidance
-3. Include nutrition advice and meal planning suggestions
-4. Suggest a realistic workout schedule
-5. Mention important safety precautions and warm-up exercises
-6. Include progress tracking methods
-7. Consider any physical limitations or health conditions
-8. Provide motivation tips and goal-setting strategies
-9. If the prompt is not related to and for fitness & workout planning then just respond "Please provide your fitness goals only!"
-Format your response in clear sections with markdown and do not include any other text or comments than the response.`
+1. Provide 8-12 specific workout/exercise recommendations
+2. For each recommendation, structure your response EXACTLY as follows (use ### for each workout):
+   ### Workout Name
+   - Type: [cardio/strength/flexibility/etc]
+   - Duration: [time per session]
+   - Difficulty: [beginner/intermediate/advanced]
+   - Equipment: [required items]
+3. Keep each point to one line
+4. Be extremely concise
+5. Do not include any other headings or sections
+6. If the prompt is not related to fitness planning, respond with "Please provide your fitness goals only!"
+Format your response in markdown with ### for each workout name.`
       },
       ecommerce: {
         title: "Product Recommender",
@@ -252,16 +315,18 @@ Format your response in clear sections with markdown and do not include any othe
         ],
         apiKey: "AIzaSyDRRWUD5lmfONagUFzMZ1bKZm48p_x-7ZA",
         systemPrompt: `You are a knowledgeable product recommendation assistant. When responding to product queries:
-1. Consider the user's budget, needs, and preferences
-2. Provide specific product recommendations with reasoning
-3. Include key features and specifications
-4. Compare different options within the budget
-5. Mention warranty and after-sales service information
-6. Include user reviews and ratings
-7. Consider energy efficiency and sustainability
-8. Provide purchase tips and where to buy
-9. If the prompt is not related to and for Product Recommendation then just respond "Please provide your product preferences only!"
-Format your response in clear sections with markdown and do not include any other text or comments than the response.`
+1. Provide 8-12 specific product recommendations
+2. For each recommendation, structure your response EXACTLY as follows (use ### for each product):
+   ### Product Name
+   - Category: [product type]
+   - Price: [price range]
+   - Key Features: [2-3 main features]
+   - Best for: [primary use case]
+3. Keep each point to one line
+4. Be extremely concise
+5. Do not include any other headings or sections
+6. If the prompt is not related to product recommendations, respond with "Please provide your product preferences only!"
+Format your response in markdown with ### for each product name.`
       },
       dining: {
         title: "Restaurant & Dining Guide",
@@ -274,16 +339,18 @@ Format your response in clear sections with markdown and do not include any othe
         ],
         apiKey: "AIzaSyD-INtu_i-rY-F0p8y0yGDbWfia8CZit6A",
         systemPrompt: `You are a knowledgeable restaurant and dining recommendation assistant. When responding to dining queries:
-1. Consider the user's cuisine preferences and dietary restrictions
-2. Provide specific restaurant recommendations with reasoning
-3. Include price range and location information
-4. Mention popular dishes and specialties
-5. Include ambiance and atmosphere details
-6. Consider reservation requirements
-7. Provide parking and accessibility information
-8. Include user reviews and ratings
-9. If the prompt is not related to and for Restaurant & Dining planning then just respond "Please provide your dining preferences only!"
-Format your response in clear sections with markdown and do not include any other text or comments than the response.`
+1. Provide 8-12 specific restaurant recommendations
+2. For each recommendation, structure your response EXACTLY as follows (use ### for each restaurant):
+   ### Restaurant Name
+   - Cuisine: [type of food]
+   - Price Range: [budget level]
+   - Specialties: [2-3 signature dishes]
+   - Atmosphere: [dining style]
+3. Keep each point to one line
+4. Be extremely concise
+5. Do not include any other headings or sections
+6. If the prompt is not related to dining recommendations, respond with "Please provide your dining preferences only!"
+Format your response in markdown with ### for each restaurant name.`
       },
       education: {
         title: "Educational Content Guide",
@@ -296,16 +363,18 @@ Format your response in clear sections with markdown and do not include any othe
         ],
         apiKey: "AIzaSyDF5AJUPwX_ZfwRNxZxDVs7U9LQuRJlOzo",
         systemPrompt: `You are a knowledgeable educational content recommendation assistant. When responding to learning queries:
-1. Consider the user's current knowledge level and learning style
-2. Provide specific course and resource recommendations
-3. Include course difficulty and time commitment
-4. Mention certification and accreditation
-5. Include pricing and value for money
-6. Consider platform features and support
-7. Provide learning path suggestions
-8. Include user reviews and success stories
-9. If the prompt is not related to and for Educational Content Guide then just respond "Please provide your learning goals only!"
-Format your response in clear sections with markdown and do not include any other text or comments than the response.`
+1. Provide 8-12 specific course/resource recommendations
+2. For each recommendation, structure your response EXACTLY as follows (use ### for each course):
+   ### Course/Resource Name
+   - Platform: [where to find it]
+   - Level: [beginner/intermediate/advanced]
+   - Duration: [time to complete]
+   - Key Topics: [2-3 main subjects]
+3. Keep each point to one line
+4. Be extremely concise
+5. Do not include any other headings or sections
+6. If the prompt is not related to educational content, respond with "Please provide your learning goals only!"
+Format your response in markdown with ### for each course name.`
       },
       news: {
         title: "News & Articles Curator",
@@ -318,16 +387,18 @@ Format your response in clear sections with markdown and do not include any othe
         ],
         apiKey: "AIzaSyBf_S4JO5ZTu6rN8s7JGcX9KmrgDXtO52A",
         systemPrompt: `You are a knowledgeable news and article recommendation assistant. When responding to news queries:
-1. Consider the user's interests and reading preferences
-2. Provide relevant and timely article recommendations
-3. Include article summaries and key points
-4. Mention source credibility and bias
-5. Include diverse perspectives on topics
-6. Consider reading time and complexity
-7. Provide context and background information
-8. Include related topics and follow-up reading
-9. If the prompt is not related to and for News & Articles Curatation then just respond "Please provide your news interests only!"
-Format your response in clear sections with markdown and do not include any other text or comments than the response.`
+1. Provide 8-12 specific article/topic recommendations
+2. For each recommendation, structure your response EXACTLY as follows (use ### for each article):
+   ### Article/Topic Title
+   - Source: [publication/platform]
+   - Category: [news type]
+   - Key Points: [2-3 main takeaways]
+   - Relevance: [why it matters]
+3. Keep each point to one line
+4. Be extremely concise
+5. Do not include any other headings or sections
+6. If the prompt is not related to news recommendations, respond with "Please provide your news interests only!"
+Format your response in markdown with ### for each article title.`
       },
       healthcare: {
         title: "Healthcare Assistant",
@@ -335,21 +406,22 @@ Format your response in clear sections with markdown and do not include any othe
         placeholder: "Tell me about your health concerns (e.g., 'I have been experiencing frequent headaches and fatigue')",
         examples: [
           { text: "General Wellness", prompt: "I want to improve my overall health, sleep better, and have more energy" },
-          { text: "Diet & Nutrition", prompt: "Looking for a balanced diet plan for better heart health" },
-          { text: "Mental Health", prompt: "I've been feeling anxious and stressed lately, need advice on managing it" }
+          { text: "Diet & Nutrition", prompt: "Looking for a balanced diet plan for better heart health" }
         ],
         apiKey: "AIzaSyBblkde0e_zPgxC5MqK6E1lxLJuhriv9H0",
         systemPrompt: `You are a healthcare information assistant. When responding to health queries:
-1. Provide general wellness advice and lifestyle recommendations
-2. Include information about preventive care
-3. Suggest when to consult healthcare professionals
-4. Share evidence-based health tips
-5. Include information about common symptoms and when to seek medical attention
-6. Provide stress management and mental health support
-7. Consider the user's current health status
-8. Always emphasize the importance of professional medical advice
-9. If the prompt is not related to and for Healthcare recommendation then just respond "Please provide health concerns only!"
-Format your response in clear sections with markdown and do not include any other text or comments than the response.`
+1. Provide 8-12 specific wellness/health recommendations
+2. For each recommendation, structure your response EXACTLY as follows (use ### for each recommendation):
+   ### Wellness Practice
+   - Type: [exercise/diet/lifestyle/etc]
+   - Benefits: [2-3 key benefits]
+   - Frequency: [how often]
+   - Level: [beginner/intermediate/advanced]
+3. Keep each point to one line
+4. Be extremely concise
+5. Do not include any other headings or sections
+6. If the prompt is not related to healthcare, respond with "Please provide your health concerns only!"
+Format your response in markdown with ### for each wellness practice.`
       },
       beauty: {
         title: "Beauty & Skincare Advisor",
@@ -362,16 +434,18 @@ Format your response in clear sections with markdown and do not include any othe
         ],
         apiKey: "AIzaSyAzZz-mQZxQ3ziLax6hxecD5T51M-8p-1g",
         systemPrompt: `You are a knowledgeable beauty and skincare recommendation assistant. When responding to beauty queries:
-1. Consider the user's skin type, concerns, and preferences
-2. Provide specific product recommendations with reasoning
-3. Include ingredient information and benefits
-4. Mention potential sensitivities and precautions
-5. Include application tips and routines
-6. Consider climate and environmental factors
-7. Provide budget-friendly alternatives
-8. Include user reviews and ratings
-9. If the prompt is not related to and for Beauty & Skincare planning then just respond "Please provide your skincare needs only!"
-Format your response in clear sections with markdown and do not include any other text or comments than the response.`
+1. Provide 8-12 specific product/routine recommendations
+2. For each recommendation, structure your response EXACTLY as follows (use ### for each product):
+   ### Product Name
+   - Type: [skincare/makeup/haircare]
+   - Price: [price range]
+   - Key Benefits: [2-3 main benefits]
+   - Best for: [skin/hair type]
+3. Keep each point to one line
+4. Be extremely concise
+5. Do not include any other headings or sections
+6. If the prompt is not related to beauty recommendations, respond with "Please provide your skincare needs only!"
+Format your response in markdown with ### for each product name.`
       },
       realestate: {
         title: "Real Estate Advisor",
@@ -384,16 +458,18 @@ Format your response in clear sections with markdown and do not include any othe
         ],
         apiKey: "AIzaSyBe6tyH5AWqh6dk0S2Ao-q8NfAtifEjWJY",
         systemPrompt: `You are a knowledgeable real estate recommendation assistant. When responding to property queries:
-1. Consider the user's budget, location preferences, and requirements
-2. Provide specific property recommendations with reasoning
-3. Include neighborhood information and amenities
-4. Mention property features and specifications
-5. Include market trends and price analysis
-6. Consider investment potential and ROI
-7. Provide financing and mortgage information
-8. Include property history and legal considerations
-9. If the prompt is not related to and for Real Estate Advisory then just respond "Please provide your property preferences only!"
-Format your response in clear sections with markdown and do not include any other text or comments than the response.`
+1. Provide 8-12 specific property/area recommendations
+2. For each recommendation, structure your response EXACTLY as follows (use ### for each property):
+   ### Property/Area Name
+   - Type: [apartment/house/neighborhood]
+   - Price Range: [budget level]
+   - Features: [2-3 key features]
+   - Location: [area/region]
+3. Keep each point to one line
+4. Be extremely concise
+5. Do not include any other headings or sections
+6. If the prompt is not related to real estate, respond with "Please provide your property preferences only!"
+Format your response in markdown with ### for each property name.`
       },
       software: {
         title: "Software & Tools Advisor",
@@ -406,16 +482,18 @@ Format your response in clear sections with markdown and do not include any othe
         ],
         apiKey: "AIzaSyCumS3q6TDxdoUIMIT0p5c9Po-z3vNEgjE",
         systemPrompt: `You are a knowledgeable software and tools recommendation assistant. When responding to software queries:
-1. Consider the user's needs, skill level, and budget
-2. Provide specific software recommendations with reasoning
-3. Include feature comparisons and alternatives
-4. Mention system requirements and compatibility
-5. Include pricing and licensing information
-6. Consider learning curve and support
-7. Provide integration capabilities
-8. Include user reviews and ratings
-9. If the prompt is not related to and for Software & Tools Advisory then just respond "Please provide your software needs only!"
-Format your response in clear sections with markdown and do not include any other text or comments than the response.`
+1. Provide 8-12 specific software/tool recommendations
+2. For each recommendation, structure your response EXACTLY as follows (use ### for each tool):
+   ### Tool Name
+   - Key Feature 1 (one line)
+   - Key Feature 2 (one line)
+   - Price: [price info]
+   - Best for: [primary use case]
+3. Keep each feature to one line
+4. Be extremely concise
+5. Do not include any other headings or sections
+6. If the prompt is not related to software recommendations, respond with "Please provide your software needs only!"
+Format your response in markdown with ### for each tool name.`
       }
     };
 
@@ -478,17 +556,77 @@ Format your response in clear sections with markdown and do not include any othe
         });
 
         if (!res.ok) {
-          throw new Error(`Error ${res.status}: ${res.statusText}`);
+          let errorMessage = "Request failed: ";
+          switch (res.status) {
+            case 503:
+              errorMessage = "The AI service is temporarily unavailable. This could be due to high traffic or maintenance. Please try again in a few minutes.";
+              break;
+            case 429:
+              errorMessage = "Too many requests. Please wait a moment before trying again.";
+              break;
+            case 400:
+              errorMessage = "Invalid request. Please check your input and try again.";
+              break;
+            case 401:
+            case 403:
+              errorMessage = "Authentication error. Please try refreshing the page.";
+              break;
+            default:
+              errorMessage += `${res.status}: ${res.statusText}`;
+          }
+          throw new Error(errorMessage);
         }
 
         const data = await res.json();
-        const markdownText = data.candidates?.[0]?.content?.parts?.[0]?.text || "No response.";
-        responseArea.innerHTML = marked.parse(markdownText);
+        if (!data.candidates?.[0]?.content?.parts?.[0]?.text) {
+          throw new Error("No response received from the AI service. Please try again.");
+        }
+
+        const markdownText = data.candidates[0].content.parts[0].text;
+        
+        // Convert markdown to HTML and wrap each recommendation in a box
+        const htmlContent = marked.parse(markdownText);
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = htmlContent;
+        
+        // Only find h3 elements (### in markdown)
+        const recommendations = tempDiv.querySelectorAll('h3');
+        let boxesHTML = '<div class="recommendations-grid">';
+        
+        if (recommendations.length === 0) {
+          throw new Error("The response format was incorrect. Please try again.");
+        }
+        
+        recommendations.forEach((title) => {
+          // Get all content until the next h3 or end
+          let details = '';
+          let current = title.nextSibling;
+          while (current && current.tagName !== 'H3') {
+            if (current.nodeType === Node.ELEMENT_NODE) {
+              details += current.outerHTML;
+            }
+            current = current.nextSibling;
+          }
+          
+          boxesHTML += `
+            <div class="recommendation-box">
+              <div class="recommendation-title">${title.textContent}</div>
+              <div class="recommendation-details">${details}</div>
+            </div>
+          `;
+        });
+        
+        boxesHTML += '</div>';
+        responseArea.innerHTML = boxesHTML;
         promptInput.value = "";
         promptInput.focus();
         autoResizeTextarea();
       } catch (err) {
-        responseArea.textContent = "Request failed: " + err.message;
+        responseArea.innerHTML = `
+          <div style="color: var(--text); padding: 20px; text-align: center;">
+            <p style="margin-bottom: 10px;">${err.message}</p>
+            <p style="font-size: 0.9em; opacity: 0.8;">If the problem persists, please try again later.</p>
+          </div>`;
       }
     }
 
