@@ -14,7 +14,7 @@ function scroll() {
         const te = currentTime - st;
         const p = Math.min(te / 600, 1);
         const e = p < 0.5 ? 2 * p * p : -1 + (4 - 2 * p) * p;
-        window.scrollTo(0, s + d * e );
+        window.scrollTo(0, (s + d * e)/2.2 );
         if (p < 1) {
             requestAnimationFrame(a);
         }

@@ -29,7 +29,8 @@ video {
 }
 
 .home-intro-tagline {
-  padding-bottom: 4rem;
+  /* padding-bottom: 4rem; */
+  padding-top: 4rem;
 
   background: linear-gradient(-60deg, var(--text), #4b49a4,var(--background-2nd),rgba(62, 134, 163, 0.875),var(--text));
   background-size: 200%;

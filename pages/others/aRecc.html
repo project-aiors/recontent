@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <title>Travel Planner</title>
+  <title>AI Recommendations</title>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   
   <style>
-   
     body {
       margin: 0;
       padding: 0;
@@ -15,16 +15,18 @@
       align-items: center;
       min-height: 100vh;
     }
+
     #chatContainer {
       display: flex;
       flex-direction: column;
       align-items: center;
       width: 100%;
       max-width: 800px;
-      margin-top: 20vh;
+      margin-top: 28vh;
       padding: 20px;
       transition: margin-top 0.4s ease;
     }
+
     #chatContainer.active {
       margin-top: 50px;
     }
@@ -34,12 +36,13 @@
       display: flex;
       width: 100%;
       /* background: #f8f9fa; */
-      background-color:var(--background-2nd);
+      background-color: var(--background-2nd);
       /* border: 1px solid #ccc; */
       border-radius: 8px;
       padding: 10px;
       /* box-shadow: 0 2px 5px rgba(0,0,0,0.05); */
     }
+
     #prompt {
       flex-grow: 1;
       border: none;
@@ -51,17 +54,19 @@
       max-height: 200px;
       overflow-y: auto;
       line-height: 1.5;
-      background-color:var(--background-2nd);
-      color:var(--text);
+      background-color: var(--background-2nd);
+      color: var(--text);
     }
+
     #prompt::placeholder {
-      color:var(--text);
-      opacity:0.5;
+      color: var(--text);
+      opacity: 0.5;
     }
+
     #submitBtn {
       border: none;
       /* background-color: #007bff; */
-      background-color:var(--background-2nd);
+      background-color: var(--background-2nd);
       color: var(--text);
       padding: 10px 16px;
       margin-left: 10px;
@@ -69,8 +74,9 @@
       cursor: pointer;
       transition: background-color 0.2s ease;
     }
+
     #submitBtn:hover {
-      background-color:var(--background);
+      background-color: var(--background);
     }
 
     #responseArea {
@@ -84,6 +90,7 @@
       font-size: 16px;
       line-height: 1.5;
     }
+
     #responseArea p {
       margin-top: 0.4em;
       margin-bottom: 0.4em;
@@ -92,49 +99,72 @@
     .travel-header {
       text-align: center;
       margin-bottom: 20px;
-      color: #1a73e8;
+      /* color: #1a73e8; */
     }
+
     .travel-header h1 {
       font-size: 2.5em;
       margin-bottom: 10px;
     }
+
     .travel-header p {
       color: #5f6368;
       font-size: 1.1em;
     }
+
     .example-prompts {
       margin-top: 15px;
       font-size: 0.9em;
       color: #5f6368;
       text-align: center;
     }
+
     .example-prompts span {
       display: inline-block;
       margin: 0 8px;
       cursor: pointer;
-      color: #1a73e8;
+      /* color: #1a73e8; */
       text-decoration: underline;
     }
+
     .example-prompts span:hover {
-      color: #174ea6;
+      color: var(--text);
     }
 
     #header-wrap {
       width: 100%;
-      position:fixed;
-      top:0;
-      left:0;
+      position: fixed;
+      top: 0;
+      left: 0;
       z-index: 1000;
+    }
+
+    .category-header {
+      text-align: center;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+
+    .category-header h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+
+    .category-header p {
+      color: #5f6368;
+      font-size: 1.1em;
     }
   </style>
   <link rel="stylesheet" href="../../styles/main.css">
 </head>
+
 <body>
 
   <div id="header-wrap">
     <div class="header">
         <div class="header-logo-container">
-            <img src="../../assets/logo.ico" class="header-app-logo clickable-no-filter" onclick="window.location.href='../../index.html'">
+        <img src="../../assets/logo.ico" class="header-app-logo clickable-no-filter"
+          onclick="window.location.href='../../index.html'">
             <div class="header-app-name">recontent</div>
         </div>
         <div class="header-right-icons-wrap">
@@ -146,28 +176,38 @@
   
   
   <div id="chatContainer">
-    <div class="travel-header">
-      <h1>Travel Planner</h1>
-      <p>Get personalized travel recommendations and itineraries based on your preferences</p>
+    <div class="category-header">
+      <h1 id="categoryTitle">Loading...</h1>
+      <p id="categoryDescription">Loading...</p>
     </div>
     <div class="input-wrapper">
-      <textarea id="prompt" rows="1" placeholder="Tell me about your travel preferences (e.g., 'I want to visit Europe in summer with a budget of $3000 for 2 weeks')"></textarea>
+      <textarea id="prompt" rows="1" placeholder="Loading..."></textarea>
       <button id="submitBtn" onclick="sendToGemini()">➤</button>
     </div>
-    <div class="example-prompts">
-      Try: 
-      <span onclick="useExample('I want to visit Southeast Asia in December for 2 weeks, budget $2000, interested in beaches and culture')">Beach & Culture</span> • 
-      <span onclick="useExample('Looking for a romantic European city break in spring, budget $1500 for 5 days')">City Break</span> • 
-      <span onclick="useExample('Family trip to Japan in summer, 10 days, with kids aged 8 and 12, budget $5000')">Family Trip</span>
+    <div class="example-prompts" id="examplePrompts">
+      <!-- Example prompts will be dynamically inserted here -->
     </div>
     <div id="responseArea" style="display: none;"></div>
   </div>
 
   <script>
-    const API_KEY = "AIzaSyBYZpDg5u9C2fb4hzAX-xiVkOMRx92eG0Y";
-    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+    // Remove the static API_URL declaration
+    // const API_KEY = "AIzaSyBYZpDg5u9C2fb4hzAX-xiVkOMRx92eG0Y";
+    // const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
 
-    const SYSTEM_PROMPT = `You are a knowledgeable travel planning assistant. When responding to travel queries:
+    // Category configurations
+    const categoryConfigs = {
+      travel: {
+        title: "Travel Planner",
+        description: "Get personalized travel recommendations and itineraries based on your preferences",
+        placeholder: "Tell me about your travel preferences (e.g., 'I want to visit Europe in summer with a budget of $3000 for 2 weeks')",
+        examples: [
+          { text: "Beach & Culture", prompt: "I want to visit Southeast Asia in December for 2 weeks, budget $2000, interested in beaches and culture" },
+          { text: "City Break", prompt: "Looking for a romantic European city break in spring, budget $1500 for 5 days" },
+          { text: "Family Trip", prompt: "Family trip to Japan in summer, 10 days, with kids aged 8 and 12, budget $5000" }
+        ],
+        apiKey: "AIzaSyBYZpDg5u9C2fb4hzAX-xiVkOMRx92eG0Y",
+        systemPrompt: `You are a knowledgeable travel planning assistant. When responding to travel queries:
 1. Consider the user's budget, time constraints, and preferences
 2. Provide specific destination recommendations with reasoning
 3. Include practical information about weather, best times to visit, and local customs
@@ -176,8 +216,218 @@
 6. Include estimated costs for major expenses
 7. Consider seasonal factors and current travel conditions
 8. Provide safety tips and local insights
-9. Only provide the response, no other text or comments.
-Format your response in clear sections with markdown.`;
+Format your response in clear sections with markdown and do not include any other text or comments than the response.`
+      },
+      fitness: {
+        title: "Fitness & Workout Planner",
+        description: "Get personalized workout plans and fitness recommendations based on your goals",
+        placeholder: "Tell me about your fitness goals (e.g., 'I want to build muscle, workout 3 times a week, and have access to a gym')",
+        examples: [
+          { text: "Weight Loss", prompt: "I want to lose 20 pounds in 6 months, can workout 4 times a week, prefer home workouts" },
+          { text: "Muscle Gain", prompt: "Looking to build muscle mass, workout 5 days a week, have access to a full gym" },
+          { text: "Beginner Fitness", prompt: "Complete beginner to fitness, want to start with basic exercises, can workout 3 times a week" }
+        ],
+        apiKey: "AIzaSyDFvEylgsGMwOpi0ySgth4-SimrS3J1IM8",
+        systemPrompt: `You are a knowledgeable fitness and workout planning assistant. When responding to fitness queries:
+1. Consider the user's fitness level, goals, and available equipment
+2. Provide specific workout recommendations with proper form guidance
+3. Include nutrition advice and meal planning suggestions
+4. Suggest a realistic workout schedule
+5. Mention important safety precautions and warm-up exercises
+6. Include progress tracking methods
+7. Consider any physical limitations or health conditions
+8. Provide motivation tips and goal-setting strategies
+Format your response in clear sections with markdown and do not include any other text or comments than the response.`
+      },
+      ecommerce: {
+        title: "Product Recommender",
+        description: "Get personalized product recommendations for electronics, home appliances, furniture, and more",
+        placeholder: "Tell me what kind of products you're looking for (e.g., 'I need a new laptop for programming, budget around $1000')",
+        examples: [
+          { text: "Electronics", prompt: "Looking for a new smartphone with good camera, budget $800, prefer Android" },
+          { text: "Home Appliances", prompt: "Need a new washing machine for a family of 4, energy efficient, budget $600" },
+          { text: "Furniture", prompt: "Looking for a comfortable office chair for long work hours, budget $300" }
+        ],
+        apiKey: "AIzaSyDRRWUD5lmfONagUFzMZ1bKZm48p_x-7ZA",
+        systemPrompt: `You are a knowledgeable product recommendation assistant. When responding to product queries:
+1. Consider the user's budget, needs, and preferences
+2. Provide specific product recommendations with reasoning
+3. Include key features and specifications
+4. Compare different options within the budget
+5. Mention warranty and after-sales service information
+6. Include user reviews and ratings
+7. Consider energy efficiency and sustainability
+8. Provide purchase tips and where to buy
+Format your response in clear sections with markdown and do not include any other text or comments than the response.`
+      },
+      dining: {
+        title: "Restaurant & Dining Guide",
+        description: "Get personalized restaurant recommendations and dining suggestions",
+        placeholder: "Tell me about your dining preferences (e.g., 'Looking for Italian restaurants in downtown, budget $50 per person')",
+        examples: [
+          { text: "Fine Dining", prompt: "Looking for a romantic fine dining restaurant for anniversary, budget $200 for two" },
+          { text: "Local Cuisine", prompt: "Want to try authentic local food in Bangkok, street food and restaurants" },
+          { text: "Family Restaurant", prompt: "Need a family-friendly restaurant with good vegetarian options" }
+        ],
+        apiKey: "AIzaSyD-INtu_i-rY-F0p8y0yGDbWfia8CZit6A",
+        systemPrompt: `You are a knowledgeable restaurant and dining recommendation assistant. When responding to dining queries:
+1. Consider the user's cuisine preferences and dietary restrictions
+2. Provide specific restaurant recommendations with reasoning
+3. Include price range and location information
+4. Mention popular dishes and specialties
+5. Include ambiance and atmosphere details
+6. Consider reservation requirements
+7. Provide parking and accessibility information
+8. Include user reviews and ratings
+Format your response in clear sections with markdown and do not include any other text or comments than the response.`
+      },
+      education: {
+        title: "Educational Content Guide",
+        description: "Get personalized recommendations for online courses and learning resources",
+        placeholder: "Tell me about your learning goals (e.g., 'I want to learn web development, beginner level, prefer video courses')",
+        examples: [
+          { text: "Programming", prompt: "Want to learn Python programming, complete beginner, prefer interactive courses" },
+          { text: "Business Skills", prompt: "Looking for courses on digital marketing and social media management" },
+          { text: "Language Learning", prompt: "Want to learn Spanish, intermediate level, prefer conversation-focused courses" }
+        ],
+        apiKey: "AIzaSyDF5AJUPwX_ZfwRNxZxDVs7U9LQuRJlOzo",
+        systemPrompt: `You are a knowledgeable educational content recommendation assistant. When responding to learning queries:
+1. Consider the user's current knowledge level and learning style
+2. Provide specific course and resource recommendations
+3. Include course difficulty and time commitment
+4. Mention certification and accreditation
+5. Include pricing and value for money
+6. Consider platform features and support
+7. Provide learning path suggestions
+8. Include user reviews and success stories
+Format your response in clear sections with markdown and do not include any other text or comments than the response.`
+      },
+      news: {
+        title: "News & Articles Curator",
+        description: "Get personalized news and article recommendations based on your interests",
+        placeholder: "Tell me about your news interests (e.g., 'I'm interested in technology news and AI developments')",
+        examples: [
+          { text: "Tech News", prompt: "Keep me updated on latest AI and machine learning developments" },
+          { text: "Business News", prompt: "Looking for articles about startup funding and venture capital" },
+          { text: "Science News", prompt: "Interested in space exploration and astronomy news" }
+        ],
+        apiKey: "AIzaSyBf_S4JO5ZTu6rN8s7JGcX9KmrgDXtO52A",
+        systemPrompt: `You are a knowledgeable news and article recommendation assistant. When responding to news queries:
+1. Consider the user's interests and reading preferences
+2. Provide relevant and timely article recommendations
+3. Include article summaries and key points
+4. Mention source credibility and bias
+5. Include diverse perspectives on topics
+6. Consider reading time and complexity
+7. Provide context and background information
+8. Include related topics and follow-up reading
+Format your response in clear sections with markdown and do not include any other text or comments than the response.`
+      },
+      healthcare: {
+        title: "Healthcare Assistant",
+        description: "Get personalized healthcare recommendations and wellness advice",
+        placeholder: "Tell me about your health concerns (e.g., 'I have been experiencing frequent headaches and fatigue')",
+        examples: [
+          { text: "General Wellness", prompt: "I want to improve my overall health, sleep better, and have more energy" },
+          { text: "Diet & Nutrition", prompt: "Looking for a balanced diet plan for better heart health" },
+          { text: "Mental Health", prompt: "I've been feeling anxious and stressed lately, need advice on managing it" }
+        ],
+        apiKey: "AIzaSyBblkde0e_zPgxC5MqK6E1lxLJuhriv9H0",
+        systemPrompt: `You are a healthcare information assistant. When responding to health queries:
+1. Provide general wellness advice and lifestyle recommendations
+2. Include information about preventive care
+3. Suggest when to consult healthcare professionals
+4. Share evidence-based health tips
+5. Include information about common symptoms and when to seek medical attention
+6. Provide stress management and mental health support
+7. Consider the user's current health status
+8. Always emphasize the importance of professional medical advice
+Format your response in clear sections with markdown and do not include any other text or comments than the response.`
+      },
+      beauty: {
+        title: "Beauty & Skincare Advisor",
+        description: "Get personalized beauty and skincare product recommendations",
+        placeholder: "Tell me about your skincare needs (e.g., 'I have dry, sensitive skin and looking for a good moisturizer')",
+        examples: [
+          { text: "Skincare Routine", prompt: "Need a complete skincare routine for oily, acne-prone skin" },
+          { text: "Hair Care", prompt: "Looking for products for damaged, frizzy hair" },
+          { text: "Makeup", prompt: "Want to find the best foundation for combination skin" }
+        ],
+        apiKey: "AIzaSyAzZz-mQZxQ3ziLax6hxecD5T51M-8p-1g",
+        systemPrompt: `You are a knowledgeable beauty and skincare recommendation assistant. When responding to beauty queries:
+1. Consider the user's skin type, concerns, and preferences
+2. Provide specific product recommendations with reasoning
+3. Include ingredient information and benefits
+4. Mention potential sensitivities and precautions
+5. Include application tips and routines
+6. Consider climate and environmental factors
+7. Provide budget-friendly alternatives
+8. Include user reviews and ratings
+Format your response in clear sections with markdown and do not include any other text or comments than the response.`
+      },
+      realestate: {
+        title: "Real Estate Advisor",
+        description: "Get personalized real estate recommendations and property advice",
+        placeholder: "Tell me about your property preferences (e.g., 'Looking for a 3-bedroom apartment in downtown, budget $500,000')",
+        examples: [
+          { text: "Home Buying", prompt: "Looking to buy a family home in suburbs, 4 bedrooms, good schools nearby" },
+          { text: "Investment Property", prompt: "Want to invest in rental property, looking for good ROI areas" },
+          { text: "First Home", prompt: "First-time homebuyer, looking for starter home, budget $300,000" }
+        ],
+        apiKey: "AIzaSyBe6tyH5AWqh6dk0S2Ao-q8NfAtifEjWJY",
+        systemPrompt: `You are a knowledgeable real estate recommendation assistant. When responding to property queries:
+1. Consider the user's budget, location preferences, and requirements
+2. Provide specific property recommendations with reasoning
+3. Include neighborhood information and amenities
+4. Mention property features and specifications
+5. Include market trends and price analysis
+6. Consider investment potential and ROI
+7. Provide financing and mortgage information
+8. Include property history and legal considerations
+Format your response in clear sections with markdown and do not include any other text or comments than the response.`
+      },
+      software: {
+        title: "Software & Tools Advisor",
+        description: "Get personalized recommendations for software and online tools",
+        placeholder: "Tell me about your software needs (e.g., 'I need a project management tool for a small team')",
+        examples: [
+          { text: "Productivity Tools", prompt: "Looking for the best note-taking and task management apps" },
+          { text: "Design Software", prompt: "Need graphic design software for beginners, budget friendly" },
+          { text: "Development Tools", prompt: "Want to find the best IDE and tools for web development" }
+        ],
+        apiKey: "AIzaSyCumS3q6TDxdoUIMIT0p5c9Po-z3vNEgjE",
+        systemPrompt: `You are a knowledgeable software and tools recommendation assistant. When responding to software queries:
+1. Consider the user's needs, skill level, and budget
+2. Provide specific software recommendations with reasoning
+3. Include feature comparisons and alternatives
+4. Mention system requirements and compatibility
+5. Include pricing and licensing information
+6. Consider learning curve and support
+7. Provide integration capabilities
+8. Include user reviews and ratings
+Format your response in clear sections with markdown and do not include any other text or comments than the response.`
+      }
+    };
+
+    // Get category from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const category = urlParams.get('category') || 'travel';
+    const config = categoryConfigs[category] || categoryConfigs.travel;
+
+    // Update API URL with category-specific API key
+    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${config.apiKey}`;
+
+    // Update page content based on category
+    document.title = config.title;
+    document.getElementById('categoryTitle').textContent = config.title;
+    document.getElementById('categoryDescription').textContent = config.description;
+    document.getElementById('prompt').placeholder = config.placeholder;
+
+    // Update example prompts
+    const examplePromptsDiv = document.getElementById('examplePrompts');
+    examplePromptsDiv.innerHTML = 'Try: ' + config.examples.map(example =>
+      `<span onclick="useExample('${example.prompt}')">${example.text}</span>`
+    ).join(' • ');
 
     function useExample(text) {
       const promptInput = document.getElementById('prompt');
@@ -196,13 +446,13 @@ Format your response in clear sections with markdown.`;
 
       chatContainer.classList.add('active');
       responseArea.style.display = 'block';
-      responseArea.innerHTML = `<em>Planning your perfect trip...</em>`;
+      responseArea.innerHTML = `<em>Processing your request...</em>`;
 
       const requestBody = {
         contents: [
           {
             parts: [
-              { text: SYSTEM_PROMPT + "\n\nUser query: " + prompt }
+              { text: config.systemPrompt + "\n\nUser query: " + prompt }
             ]
           }
         ]
@@ -226,6 +476,7 @@ Format your response in clear sections with markdown.`;
         responseArea.innerHTML = marked.parse(markdownText);
         promptInput.value = "";
         promptInput.focus();
+        autoResizeTextarea();
       } catch (err) {
         responseArea.textContent = "Request failed: " + err.message;
       }
@@ -234,27 +485,27 @@ Format your response in clear sections with markdown.`;
     // Add auto-resize functionality
     function autoResizeTextarea() {
       const textarea = document.getElementById('prompt');
-      textarea.style.height = 'auto'; // Reset height to auto to get the correct scrollHeight
+      textarea.style.height = 'auto';
       textarea.style.height = (textarea.scrollHeight) + 'px';
     }
 
     // Add event listeners for auto-resize
     document.getElementById('prompt').addEventListener('input', autoResizeTextarea);
-    document.getElementById('prompt').addEventListener('keydown', function(e) {
+    document.getElementById('prompt').addEventListener('keydown', function (e) {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
         sendToGemini();
       } else {
-        // Allow a small delay for the input event to fire and adjust height
         setTimeout(autoResizeTextarea, 0);
       }
     });
 
     // Initial resize
-    window.addEventListener('load', function() {
+    window.addEventListener('load', function () {
       autoResizeTextarea();
     });
   </script>
   <script src="aRecc.js" defer></script>
 </body>
+
 </html>

@@ -1,1 +1,0 @@
-const gApi_travel = "AIzaSyBYZpDg5u9C2fb4hzAX-xiVkOMRx92eG0Y"
