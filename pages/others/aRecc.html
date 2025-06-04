@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Travel Planner</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  
+  <style>
+   
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    #chatContainer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 800px;
+      margin-top: 20vh;
+      padding: 20px;
+      transition: margin-top 0.4s ease;
+    }
+    #chatContainer.active {
+      margin-top: 50px;
+    }
+
+    /* Prompt Box & Submit Button */
+    .input-wrapper {
+      display: flex;
+      width: 100%;
+      /* background: #f8f9fa; */
+      background-color:var(--background-2nd);
+      /* border: 1px solid #ccc; */
+      border-radius: 8px;
+      padding: 10px;
+      /* box-shadow: 0 2px 5px rgba(0,0,0,0.05); */
+    }
+    #prompt {
+      flex-grow: 1;
+      border: none;
+      resize: none;
+      font-size: 15px;
+      outline: none;
+      padding: 12px;
+      min-height: 70px;
+      max-height: 200px;
+      overflow-y: auto;
+      line-height: 1.5;
+      background-color:var(--background-2nd);
+      color:var(--text);
+    }
+    #prompt::placeholder {
+      color:var(--text);
+      opacity:0.5;
+    }
+    #submitBtn {
+      border: none;
+      /* background-color: #007bff; */
+      background-color:var(--background-2nd);
+      color: var(--text);
+      padding: 10px 16px;
+      margin-left: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    #submitBtn:hover {
+      background-color:var(--background);
+    }
+
+    #responseArea {
+      margin-top: 30px;
+      margin-bottom: 35px;
+      /* background: white; */
+      padding: 20px 35px;
+      border-radius: 10px;
+      /* box-shadow: 0 2px 8px rgba(0,0,0,0.1); */
+      width: 100%;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    #responseArea p {
+      margin-top: 0.4em;
+      margin-bottom: 0.4em;
+    }
+
+    .travel-header {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #1a73e8;
+    }
+    .travel-header h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+    .travel-header p {
+      color: #5f6368;
+      font-size: 1.1em;
+    }
+    .example-prompts {
+      margin-top: 15px;
+      font-size: 0.9em;
+      color: #5f6368;
+      text-align: center;
+    }
+    .example-prompts span {
+      display: inline-block;
+      margin: 0 8px;
+      cursor: pointer;
+      color: #1a73e8;
+      text-decoration: underline;
+    }
+    .example-prompts span:hover {
+      color: #174ea6;
+    }
+
+    #header-wrap {
+      width: 100%;
+      position:fixed;
+      top:0;
+      left:0;
+      z-index: 1000;
+    }
+  </style>
+  <link rel="stylesheet" href="../../styles/main.css">
+</head>
+<body>
+
+  <div id="header-wrap">
+    <div class="header">
+        <div class="header-logo-container">
+            <img src="../../assets/logo.ico" class="header-app-logo clickable-no-filter" onclick="window.location.href='../../index.html'">
+            <div class="header-app-name">recontent</div>
+        </div>
+        <div class="header-right-icons-wrap">
+            <img id="theme-toggle" class="header-right-icons clickable-no-filter" onclick="toggleTheme()">
+        </div>
+    </div>
+  </div>
+
+  
+  
+  <div id="chatContainer">
+    <div class="travel-header">
+      <h1>Travel Planner</h1>
+      <p>Get personalized travel recommendations and itineraries based on your preferences</p>
+    </div>
+    <div class="input-wrapper">
+      <textarea id="prompt" rows="1" placeholder="Tell me about your travel preferences (e.g., 'I want to visit Europe in summer with a budget of $3000 for 2 weeks')"></textarea>
+      <button id="submitBtn" onclick="sendToGemini()">➤</button>
+    </div>
+    <div class="example-prompts">
+      Try: 
+      <span onclick="useExample('I want to visit Southeast Asia in December for 2 weeks, budget $2000, interested in beaches and culture')">Beach & Culture</span> • 
+      <span onclick="useExample('Looking for a romantic European city break in spring, budget $1500 for 5 days')">City Break</span> • 
+      <span onclick="useExample('Family trip to Japan in summer, 10 days, with kids aged 8 and 12, budget $5000')">Family Trip</span>
+    </div>
+    <div id="responseArea" style="display: none;"></div>
+  </div>
+
+  <script>
+    const API_KEY = "AIzaSyBYZpDg5u9C2fb4hzAX-xiVkOMRx92eG0Y";
+    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+
+    const SYSTEM_PROMPT = `You are a knowledgeable travel planning assistant. When responding to travel queries:
+1. Consider the user's budget, time constraints, and preferences
+2. Provide specific destination recommendations with reasoning
+3. Include practical information about weather, best times to visit, and local customs
+4. Suggest a rough itinerary if requested
+5. Mention any important travel requirements (visas, vaccinations, etc.)
+6. Include estimated costs for major expenses
+7. Consider seasonal factors and current travel conditions
+8. Provide safety tips and local insights
+9. Only provide the response, no other text or comments.
+Format your response in clear sections with markdown.`;
+
+    function useExample(text) {
+      const promptInput = document.getElementById('prompt');
+      promptInput.value = text;
+      promptInput.focus();
+      autoResizeTextarea();
+    }
+
+    async function sendToGemini() {
+      const promptInput = document.getElementById("prompt");
+      const prompt = promptInput.value.trim();
+      const chatContainer = document.getElementById("chatContainer");
+      const responseArea = document.getElementById("responseArea");
+
+      if (!prompt) return;
+
+      chatContainer.classList.add('active');
+      responseArea.style.display = 'block';
+      responseArea.innerHTML = `<em>Planning your perfect trip...</em>`;
+
+      const requestBody = {
+        contents: [
+          {
+            parts: [
+              { text: SYSTEM_PROMPT + "\n\nUser query: " + prompt }
+            ]
+          }
+        ]
+      };
+
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(requestBody)
+        });
+
+        if (!res.ok) {
+          throw new Error(`Error ${res.status}: ${res.statusText}`);
+        }
+
+        const data = await res.json();
+        const markdownText = data.candidates?.[0]?.content?.parts?.[0]?.text || "No response.";
+        responseArea.innerHTML = marked.parse(markdownText);
+        promptInput.value = "";
+        promptInput.focus();
+      } catch (err) {
+        responseArea.textContent = "Request failed: " + err.message;
+      }
+    }
+
+    // Add auto-resize functionality
+    function autoResizeTextarea() {
+      const textarea = document.getElementById('prompt');
+      textarea.style.height = 'auto'; // Reset height to auto to get the correct scrollHeight
+      textarea.style.height = (textarea.scrollHeight) + 'px';
+    }
+
+    // Add event listeners for auto-resize
+    document.getElementById('prompt').addEventListener('input', autoResizeTextarea);
+    document.getElementById('prompt').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendToGemini();
+      } else {
+        // Allow a small delay for the input event to fire and adjust height
+        setTimeout(autoResizeTextarea, 0);
+      }
+    });
+
+    // Initial resize
+    window.addEventListener('load', function() {
+      autoResizeTextarea();
+    });
+  </script>
+  <script src="aRecc.js" defer></script>
+</body>
+</html>
