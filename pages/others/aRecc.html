@@ -137,6 +137,19 @@
       opacity: 0.9;
     }
 
+    .recommendation-details a {
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px dotted var(--text);
+      opacity: 0.9;
+      transition: opacity 0.2s ease;
+    }
+
+    .recommendation-details a:hover {
+      opacity: 1;
+      border-bottom: 1px solid var(--text);
+    }
+
     .recommendation-details ul {
       margin: 4px 0;
       padding-left: 16px;
@@ -260,10 +273,10 @@
       travel: {
         title: "Travel Planner",
         description: "Get personalized travel recommendations and itineraries based on your preferences",
-        placeholder: "Tell me about your travel preferences (e.g., 'I want to visit Europe in summer with a budget of $3000 for 2 weeks')",
+        placeholder: "Tell me about your travel preferences \n(e.g., 'Europe in summer, budget $3000, 2 weeks')",
         examples: [
-          { text: "Beach & Culture", prompt: "I want to visit Southeast Asia in December for 2 weeks, budget $2000, interested in beaches and culture" },
-          { text: "City Break", prompt: "Looking for a romantic European city break in spring, budget $1500 for 5 days" },
+          { text: "Beach & Culture", prompt: "Southeast Asia in December for 2 weeks, budget $2000, interested in beaches and culture" },
+          { text: "City Break", prompt: "Romantic European city break in spring, budget $1500 for 5 days" },
           { text: "Family Trip", prompt: "Family trip to Japan in summer, 10 days, with kids aged 8 and 12, budget $5000" }
         ],
         apiKey: "AIzaSyBYZpDg5u9C2fb4hzAX-xiVkOMRx92eG0Y",
@@ -276,10 +289,12 @@
    - Budget: [provide specific daily/weekly costs, e.g., "Budget: $50-100 per day for food and activities, $100-200 per night for accommodation"]
    - Highlights: [2-3 key attractions]
 3. Keep each point to one line
-4. Be extremely concise but provide specific budget numbers
+4. Be extremely concise
 5. Do not include any other headings or sections
-6. If the prompt is not related to travel planning, respond with "Please provide your travel preferences only!"
-Format your response in markdown with ### for each destination name.`
+6. Do not include any introductory text or category headers
+7. Start directly with the first destination
+8. If the prompt is not related to travel planning, respond with "Please provide your travel preferences only!"
+Format your response in markdown with ### for each destination name. Do not include any other text before or after the recommendations.`
       },
       fitness: {
         title: "Fitness & Workout Planner",
@@ -302,8 +317,10 @@ Format your response in markdown with ### for each destination name.`
 3. Keep each point to one line
 4. Be extremely concise
 5. Do not include any other headings or sections
-6. If the prompt is not related to fitness planning, respond with "Please provide your fitness goals only!"
-Format your response in markdown with ### for each workout name.`
+6. Do not include any introductory text or category headers
+7. Start directly with the first workout
+8. If the prompt is not related to fitness planning, respond with "Please provide your fitness goals only!"
+Format your response in markdown with ### for each workout name. Do not include any other text before or after the recommendations.`
       },
       ecommerce: {
         title: "Product Recommender",
@@ -325,9 +342,11 @@ Format your response in markdown with ### for each workout name.`
    - Best for: [primary use case]
 3. Keep each point to one line
 4. Be extremely concise
-5. Do not include any other headings or sections
-6. If the prompt is not related to product recommendations, respond with "Please provide your product preferences only!"
-Format your response in markdown with ### for each product name.`
+5. Do not include any links as they may become outdated
+6. Do not include any other headings or sections
+7. Start directly with the first product
+8. If the prompt is not related to product recommendations, respond with "Please provide your product preferences only!"
+Format your response in markdown with ### for each product name. Do not include any other text before or after the recommendations.`
       },
       dining: {
         title: "Restaurant & Dining Guide",
@@ -350,8 +369,10 @@ Format your response in markdown with ### for each product name.`
 3. Keep each point to one line
 4. Be extremely concise
 5. Do not include any other headings or sections
-6. If the prompt is not related to dining recommendations, respond with "Please provide your dining preferences only!"
-Format your response in markdown with ### for each restaurant name.`
+6. Do not include any introductory text or category headers
+7. Start directly with the first restaurant
+8. If the prompt is not related to dining recommendations, respond with "Please provide your dining preferences only!"
+Format your response in markdown with ### for each restaurant name. Do not include any other text before or after the recommendations.`
       },
       education: {
         title: "Educational Content Guide",
@@ -367,15 +388,19 @@ Format your response in markdown with ### for each restaurant name.`
 1. Provide 8-12 specific course/resource recommendations
 2. For each recommendation, structure your response EXACTLY as follows (use ### for each course):
    ### Course/Resource Name
-   - Platform: [where to find it]
+   - Platform: [platform name with link to course]
    - Level: [beginner/intermediate/advanced]
    - Duration: [time to complete]
    - Key Topics: [2-3 main subjects]
 3. Keep each point to one line
 4. Be extremely concise
-5. Do not include any other headings or sections
-6. If the prompt is not related to educational content, respond with "Please provide your learning goals only!"
-Format your response in markdown with ### for each course name.`
+5. Include clickable links to courses where available
+6. Format links in markdown: [Platform Name](course_url)
+7. Do not include any other headings or sections
+8. Do not include any introductory text or category headers
+9. Start directly with the first course
+10. If the prompt is not related to educational content, respond with "Please provide your learning goals only!"
+Format your response in markdown with ### for each course name. Do not include any other text before or after the recommendations.`
       },
       news: {
         title: "News & Articles Curator",
@@ -390,16 +415,18 @@ Format your response in markdown with ### for each course name.`
         systemPrompt: `You are a knowledgeable news and article recommendation assistant. When responding to news queries:
 1. Provide 8-12 specific article/topic recommendations
 2. For each recommendation, structure your response EXACTLY as follows (use ### for each article):
-   ### Article/Topic Title
-   - Source: [publication/platform]
+   ### Article Title
+   - Source: [publication/platform name]
    - Category: [news type]
    - Key Points: [2-3 main takeaways]
    - Relevance: [why it matters]
 3. Keep each point to one line
 4. Be extremely concise
-5. Do not include any other headings or sections
-6. If the prompt is not related to news recommendations, respond with "Please provide your news interests only!"
-Format your response in markdown with ### for each article title.`
+5. Do not include any links as they may become outdated
+6. Do not include any other headings or sections
+7. Start directly with the first article
+8. If the prompt is not related to news recommendations, respond with "Please provide your news interests only!"
+Format your response in markdown with ### for each article title. Do not include any other text before or after the recommendations.`
       },
       healthcare: {
         title: "Healthcare Assistant",
@@ -421,8 +448,10 @@ Format your response in markdown with ### for each article title.`
 3. Keep each point to one line
 4. Be extremely concise
 5. Do not include any other headings or sections
-6. If the prompt is not related to healthcare, respond with "Please provide your health concerns only!"
-Format your response in markdown with ### for each wellness practice.`
+6. Do not include any introductory text or category headers
+7. Start directly with the first wellness practice
+8. If the prompt is not related to healthcare, respond with "Please provide your health concerns only!"
+Format your response in markdown with ### for each wellness practice. Do not include any other text before or after the recommendations.`
       },
       beauty: {
         title: "Beauty & Skincare Advisor",
@@ -445,8 +474,10 @@ Format your response in markdown with ### for each wellness practice.`
 3. Keep each point to one line
 4. Be extremely concise
 5. Do not include any other headings or sections
-6. If the prompt is not related to beauty recommendations, respond with "Please provide your skincare needs only!"
-Format your response in markdown with ### for each product name.`
+6. Do not include any introductory text or category headers
+7. Start directly with the first product
+8. If the prompt is not related to beauty recommendations, respond with "Please provide your skincare needs only!"
+Format your response in markdown with ### for each product name. Do not include any other text before or after the recommendations.`
       },
       realestate: {
         title: "Real Estate Advisor",
@@ -469,8 +500,10 @@ Format your response in markdown with ### for each product name.`
 3. Keep each point to one line
 4. Be extremely concise
 5. Do not include any other headings or sections
-6. If the prompt is not related to real estate, respond with "Please provide your property preferences only!"
-Format your response in markdown with ### for each property name.`
+6. Do not include any introductory text or category headers
+7. Start directly with the first property
+8. If the prompt is not related to real estate, respond with "Please provide your property preferences only!"
+Format your response in markdown with ### for each property name. Do not include any other text before or after the recommendations.`
       },
       software: {
         title: "Software & Tools Advisor",
@@ -488,13 +521,17 @@ Format your response in markdown with ### for each property name.`
    ### Tool Name
    - Key Feature 1 (one line)
    - Key Feature 2 (one line)
-   - Price: [price info]
+   - Price: [price info with link to official site]
    - Best for: [primary use case]
 3. Keep each feature to one line
 4. Be extremely concise
-5. Do not include any other headings or sections
-6. If the prompt is not related to software recommendations, respond with "Please provide your software needs only!"
-Format your response in markdown with ### for each tool name.`
+5. Include clickable links to official websites where available
+6. Format links in markdown: [Tool Name](official_url)
+7. Do not include any other headings or sections
+8. Do not include any introductory text or category headers
+9. Start directly with the first tool
+10. If the prompt is not related to software recommendations, respond with "Please provide your software needs only!"
+Format your response in markdown with ### for each tool name. Do not include any other text before or after the recommendations.`
       }
     };
 
@@ -583,10 +620,32 @@ Format your response in markdown with ### for each tool name.`
           throw new Error("No response received from the AI service. Please try again.");
         }
 
-        const markdownText = data.candidates[0].content.parts[0].text;
+        let markdownText = data.candidates[0].content.parts[0].text;
+        
+        // Remove any content before the first ### heading
+        const firstHeadingIndex = markdownText.indexOf('###');
+        if (firstHeadingIndex > 0) {
+          markdownText = markdownText.substring(firstHeadingIndex);
+        }
+        
+        // Remove any content after the last card
+        const lastHeadingIndex = markdownText.lastIndexOf('###');
+        if (lastHeadingIndex !== -1) {
+          const lastCardEnd = markdownText.indexOf('\n\n', lastHeadingIndex);
+          if (lastCardEnd !== -1) {
+            markdownText = markdownText.substring(0, lastCardEnd);
+          }
+        }
         
         // Convert markdown to HTML and wrap each recommendation in a box
-        const htmlContent = marked.parse(markdownText);
+        const htmlContent = marked.parse(markdownText, {
+          breaks: true,
+          gfm: true,
+          headerIds: false,
+          mangle: false,
+          sanitize: false
+        });
+        
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = htmlContent;
         
@@ -599,11 +658,24 @@ Format your response in markdown with ### for each tool name.`
         }
         
         recommendations.forEach((title) => {
-          // Get all content until the next h3 or end
+          // Skip if the title is a category or section header
+          const titleText = title.textContent.toLowerCase();
+          if (titleText.includes('recommendation') || 
+              titleText.includes('category') || 
+              titleText.includes('section') ||
+              titleText.includes('best') ||
+              titleText.includes('top')) {
+            return;
+          }
+
           let details = '';
           let current = title.nextSibling;
           while (current && current.tagName !== 'H3') {
             if (current.nodeType === Node.ELEMENT_NODE) {
+              if (current.tagName === 'A') {
+                current.setAttribute('target', '_blank');
+                current.setAttribute('rel', 'noopener noreferrer');
+              }
               details += current.outerHTML;
             }
             current = current.nextSibling;
