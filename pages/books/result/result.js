@@ -175,18 +175,18 @@ function displayContentDetails(content) {
 // Modify this function to handle adding content to favorites
 function addToFavorites(content, button, event) {
   event.stopPropagation();
-  let favorites = JSON.parse(localStorage.getItem('fav_movies')) || [];
+  let favorites = JSON.parse(localStorage.getItem('fav_books')) || [];
   
   const isAlreadyFavorite = favorites.some(fav => fav[0] === content[0]);
   
   if (!isAlreadyFavorite) {
     favorites.push(content);
-    localStorage.setItem('fav_movies', JSON.stringify(favorites));
+    localStorage.setItem('fav_books', JSON.stringify(favorites));
     button.textContent = 'Added to Favorites';
     button.classList.add('fav-button-added');
   } else {
     favorites = favorites.filter(fav => fav[0] !== content[0]);
-    localStorage.setItem('fav_movies', JSON.stringify(favorites));
+    localStorage.setItem('fav_books', JSON.stringify(favorites));
     button.textContent = 'Add to Favorites';
     button.classList.remove('fav-button-added');
   }
@@ -196,7 +196,7 @@ function addToFavorites(content, button, event) {
 }
 
 function checkAndUpdateFavorites(content, button) {
-  const favorites = JSON.parse(localStorage.getItem('fav_movies')) || [];
+  const favorites = JSON.parse(localStorage.getItem('fav_books')) || [];
   const isAlreadyFavorite = favorites.some(fav => fav[0] === content[0]);
   button.textContent = isAlreadyFavorite ? 'Added to Favorites' : 'Add to Favorites';
   button.classList.toggle('fav-button-added', isAlreadyFavorite);
@@ -207,7 +207,7 @@ function deleteFavorite(event) {
   console.log('deleteFavorite')
   event.stopPropagation();
   const index = event.target.dataset.index;
-  const favorites = JSON.parse(localStorage.getItem('fav_movies')) || [];
+  const favorites = JSON.parse(localStorage.getItem('fav_books')) || [];
   const chosenContent = JSON.parse(localStorage.getItem('chosenContent')) || [];
   
   console.log('>>>',favorites[index],chosenContent)
@@ -217,7 +217,7 @@ function deleteFavorite(event) {
     btn.classList.remove('fav-button-added');
   }
   favorites.splice(index, 1);
-  localStorage.setItem('fav_movies', JSON.stringify(favorites));
+  localStorage.setItem('fav_books', JSON.stringify(favorites));
 
   updateFavoritesList(); // Refresh the favorites list
 }
@@ -274,8 +274,8 @@ function displayRecommendations(recommendedIds) {
 
     const detailsDiv = document.createElement("div");
 
-    const movie = dataCSV.find(m => m.id === id);
-    detailsDiv.textContent = movie.release_date + " | " + movie.language;
+    const book = dataCSV.find(m => m.bookId === id);
+    detailsDiv.textContent = book.publishDate + " | " + book.language;
     detailsDiv.style.fontSize = "0.8em";
 
 
@@ -312,7 +312,7 @@ function displayRecommendations(recommendedIds) {
     // Add click event listener to each searched-results div
     recommendedCard.addEventListener('click', () => {
       // Store the clicked movie data in localStorage
-      localStorage.setItem('chosenContent', JSON.stringify([movie.id,movie.imdb_id,movie.title,movie.language,movie.release_date]));
+      localStorage.setItem('chosenContent', JSON.stringify([book.bookId,book.title,book.language,book.release_date,book.coverImg]));
       // Navigate to the result page
       window.location.href = 'result.html';
     });

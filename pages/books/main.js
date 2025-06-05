@@ -1,6 +1,5 @@
 let userBoxVisible = false;
 let toggleButtonImg;
-let omdbApiKeyIndex = Math.floor(Math.random() * config.omdbApiKey.length);
 
 setTheme();
 
@@ -53,7 +52,7 @@ function toggleTheme() {
 // function initializeFavoritesList() {
 function updateFavoritesList() {
   const favoriteList = document.getElementById("favorite-list");
-  const favorites = JSON.parse(localStorage.getItem('fav_movies')) || [];
+  const favorites = JSON.parse(localStorage.getItem('fav_books')) || [];
   
   if (favorites.length === 0) {
     favoriteList.innerHTML = '<p>Empty!</p>';
@@ -64,10 +63,11 @@ function updateFavoritesList() {
   favorites.forEach((content, index) => {
     favoritesHTML += `
       <div class="favorite-item" data-index="${index}">
-        <img src="../../../assets/movie.svg" class="favorite-poster loading" data-imdb-id="${content[1]}" style="filter: var(--invert);">
+        <img src="${content.coverImg ? content.coverImg : '../../../assets/book.svg'}" ${!content.coverImg  ? 'style="filter: var(--invert);"' : ''}>
+
         <div class="favorite-details">
-          <div class="favorite-title">${content[2]}</div>
-          <div class="favorite-year">${content[4]}</div>
+          <div class="favorite-title">${content[1]}</div>
+          <div class="favorite-year">${content[3]}</div>
         </div>
         <button class="delete-favorite" data-index="${index}">×</button>
       </div>
@@ -85,50 +85,34 @@ function updateFavoritesList() {
     item.addEventListener('click', openFavoriteResult);
   });
 
-  // Lazy load images
-  lazyLoadFavoritePosters();
 }
 
 function deleteFavorite(event) {
   event.stopPropagation();
   const index = event.target.dataset.index;
-  const favorites = JSON.parse(localStorage.getItem('fav_movies')) || [];
+  const favorites = JSON.parse(localStorage.getItem('fav_books')) || [];
   
   favorites.splice(index, 1);
-  localStorage.setItem('fav_movies', JSON.stringify(favorites));
+  localStorage.setItem('fav_books', JSON.stringify(favorites));
   
   updateFavoritesList();
 }
 
-function lazyLoadFavoritePosters() {
-  console.log('lazyLoadFavoritePosters main.js')
-  setTimeout(() => {
-    document.querySelectorAll('.favorite-poster').forEach(img => {
-      const imdbId = img.dataset.imdbId;
-      if (imdbId) {
-        fetch(`https://www.omdbapi.com/?i=${imdbId}&apikey=${getNextOmdbApiKey()}`)
-          .then(response => response.json())
-          .then(data => {
-            img.classList.remove("loading");
-            if (data.Poster && data.Poster !== "N/A") {
-              img.src = data.Poster;
-              img.style.filter = "none";
-            }
-          })
-          .catch(error => console.error("Error fetching movie poster:", error));
-      }
-    });
-  }, 100); // Small delay to ensure DOM is ready
-}
 
 function openFavoriteResult(event) {
   const index = event.currentTarget.dataset.index;
-  const favorites = JSON.parse(localStorage.getItem('fav_movies')) || [];
+  const favorites = JSON.parse(localStorage.getItem('fav_books')) || [];
   const selectedContent = favorites[index];
 
   // Store the selected content in localStorage
   localStorage.setItem('chosenContent', JSON.stringify(selectedContent));
 
   // Navigate to the result page
-  window.location.href = '../../../../result.html';
+  // window.location.href = 'result.html';
+  if (window.location.pathname.includes('/pages/books/result/')) {
+    window.location.href = 'result.html';
+  } else {
+    window.location.href = '../result/result.html';
+  }
+  
 }

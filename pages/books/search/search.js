@@ -203,8 +203,8 @@ function displaySearchResults(results) {
     // Add click event listener to each searched-results div
     resultItem.addEventListener('click', () => {
       // Store the clicked movie data in localStorage
-      localStorage.setItem('chosenContent', JSON.stringify([row.bookId, row.title, row.language, row.publishDate,]));
-      // Navigate to the result page
+      localStorage.setItem('chosenContent', JSON.stringify([row.bookId, row.title, row.language, row.publishDate,row.coverImg]));
+      // Navigate to the result
       window.location.href = '../result/result.html';
     });
   });
@@ -279,7 +279,7 @@ function displaySearchedResults(results) {
     // Add click event listener to each searched-results div
     searchedResults.addEventListener('click', () => {
       // Store the clicked movie data in localStorage
-      localStorage.setItem('chosenContent', JSON.stringify([row.bookId, row.title, row.language, row.publishDate]));
+      localStorage.setItem('chosenContent', JSON.stringify([row.bookId, row.title, row.language, row.publishDate, row.coverImg]));
       // Navigate to the result page
       window.location.href = '../result/result.html';
     });
