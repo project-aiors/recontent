@@ -1,18 +1,21 @@
 const contentSuggestions = [
   "English",
-  "Hindi",
   "Bengali",
   "Horror",
   "Adventure",
   "Comedy",
-  "Romance",
-  "Drama",
-  "Action",
   "Fiction",
-  "Fantasy",
+  "Mystery",
   "Thriller",
   "Mystery",
-  "Crime"
+  "Crime",
+  "Fiction",
+  "Self help",
+  "Biography",
+  "Poetry",
+  "Philosophy",
+  "Spiritual",
+  "Business"
 ];
 
 let selectedSuggestion;
@@ -30,7 +33,7 @@ let data;
 
 
 // Add these arrays at the top of your file
-const isGenreSearch = ['horror', 'comedy', 'adventure', 'action', 'drama', 'romance', 'thriller', 'sci-fi', 'fantasy', 'mystery', 'animation', 'documentary', 'biography', 'crime', 'western', 'fiction', 'family'];
+const isGenreSearch = ['horror', 'comedy', 'adventure', 'action', 'drama', 'romance', 'thriller', 'sci-fi', 'fantasy', 'mystery', 'animation', 'documentary', 'biography', 'crime', 'western', 'fiction', 'family', 'Philosophy','Spiritual','Business','Poetry','Fiction'];
 const isLanguageSearch = ['english', 'hindi', 'bengali', 'tamil', 'telugu', 'malayalam', 'kannada', 'marathi', 'punjabi', 'gujarati', 'urdu', 'french', 'spanish', 'german', 'italian', 'japanese', 'korean', 'chinese'];
 
 updateFavoritesList()
