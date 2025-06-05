@@ -1,5 +1,6 @@
 let userBoxVisible = false;
 let toggleButtonImg;
+let omdbApiKeyIndex = Math.floor(Math.random() * config.omdbApiKey.length);
 
 setTheme();
 
@@ -129,5 +130,5 @@ function openFavoriteResult(event) {
   localStorage.setItem('chosenContent', JSON.stringify(selectedContent));
 
   // Navigate to the result page
-  window.location.href = 'result.html';
+  window.location.href = '../../../../result.html';
 }

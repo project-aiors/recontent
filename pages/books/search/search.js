@@ -180,7 +180,6 @@ function displaySearchResults(results) {
 
 
 
-
     // Create a text container for title and IMDB ID
     const textContainer = document.createElement("div");
     textContainer.className = "searchTerm-result-text";
@@ -203,7 +202,7 @@ function displaySearchResults(results) {
       // Store the clicked movie data in localStorage
       localStorage.setItem('chosenContent', JSON.stringify([row.id, row.title, row.language, row.publishDate]));
       // Navigate to the result page
-      window.location.href = 'result.html';
+      window.location.href = '../result/result.html';
     });
   });
   showSearchResults();
@@ -279,7 +278,7 @@ function displaySearchedResults(results) {
       // Store the clicked movie data in localStorage
       localStorage.setItem('chosenContent', JSON.stringify([row.id, row.title, row.language, row.publishDate]));
       // Navigate to the result page
-      window.location.href = 'result.html';
+      window.location.href = '../result/result.html';
     });
   });
 }
