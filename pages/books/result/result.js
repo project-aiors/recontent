@@ -6,7 +6,7 @@ let dataCSV;
 
 function getYtApiKey() {
   const key = config.ytApiKey[Math.floor(Math.random() * config.ytApiKey.length)];
-  return key.slice(0,1)+key.slice(2,-1);
+  return key.slice(0, 1) + key.slice(2, -1);
 }
 
 // document.addEventListener('DOMContentLoaded', () => {
@@ -36,27 +36,45 @@ function displayContentDetails(content) {
   const book = dataCSV.find(m => String(m.bookId) == String(content[0]));
 
 
-  console.log(book)
+  // Helper function to safely parse arrays
+  function parseArray(data) {
+    if (Array.isArray(data)) return data;
+    if (typeof data === 'string') {
+      try {
+        // Convert single quotes to double quotes if needed
+        const fixed = data.replace(/'/g, '"');
+        const parsed = JSON.parse(fixed);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        return [];
+      }
+    }
+    return [];
+  }
+
+  // Safely parse genres and awards
+  const genres = parseArray(book.genres);
+  const awards = parseArray(book.awards);
+
+  // Now build the HTML
   const detailsHTML = `
-    <div class="chosen-content-poster">
-   
-        <img src="${book.coverImg ? book.coverImg : '../../../assets/book.svg'}" ${!book.coverImg ? 'style="filter: var(--invert);"' : ''}>
+  <div class="chosen-content-poster">
+      <img src="${book.coverImg ? book.coverImg : '../../../assets/book.svg'}" ${!book.coverImg ? 'style="filter: var(--invert);"' : ''}>
+      <button id="add-to-favorites" class="fav-button clickable">Add to Favorites</button>
+  </div>
+  <div class="chosen-content-info">
+    <h1>${content[1]}</h1>
+    <p><b>Language:</b> ${content[2]}</p>
+    <p><b>Author:</b> ${book.author}</p>
+    <p><b>Publish Date:</b> ${book.publishDate || '<i>Info unavailable</i>'}</p>
+    <p><b>Genres:</b> ${genres.length ? genres.join(', ') : '<i>Info unavailable</i>'}</p>
+    <p><b>Rating:</b> ${book.rating || '<i>Info unavailable</i>'}</p>
+    <p><b>Awards:</b> ${awards.length ? awards.join(', ') : '<i>Info unavailable</i>'}</p>
+    <p><b>Pages:</b> ${book.pages || '<i>Info unavailable</i>'}</p>
+    <p><b>Description:</b> ${book.description || '<i>Info unavailable</i>'}</p>
+  </div>
+`;
 
-
-        <button id="add-to-favorites" class="fav-button clickable">Add to Favorites</button>
-    </div>
-    <div class="chosen-content-info">
-      <h1>${content[1]}</h1>
-      <p><b>Language:</b> ${content[2]}</p>
-      <p><b>Publish Date:</b> ${book.publishDate}</p>
-      <p><b>Genres:</b> ${book.genres}</p>
-      <p><b>Rating:</b> ${book.rating}</p>
-      <p><b>Pages:</b> ${book.pages}</p>
-      <p><b>Description:</b> ${book.description}</p>
-      <div id="additional-info">
-      </div>
-    </div>
-  `;
 
   chosenContentWrap.innerHTML = detailsHTML;
 
@@ -77,7 +95,7 @@ function displayContentDetails(content) {
   // getRecommendations(content[0]); //sending id and receiving ids from server
   getRecommendations(content[1]); //sending id and receiving ids from server
 
-  
+
 
 
 
@@ -112,10 +130,10 @@ function displayContentDetails(content) {
   //         </span>
   //       </p>
   //     `;
-  
-  
-  
-  
+
+
+
+
 
   // Lazy load movie details from OMDB API
   // fetch(`https://www.omdbapi.com/?i=${content[1]}&apikey=${getNextOmdbApiKey()}`)
@@ -126,7 +144,7 @@ function displayContentDetails(content) {
   //       posterImg.style.filter = "none";
   //     }
   //     posterImg.classList.remove("loading");
-      
+
   //     // Update additional movie details
   //     additionalInfo.innerHTML = `
   //       <p><b>Release Date:</b> ${content[3]}</p>
@@ -176,9 +194,9 @@ function displayContentDetails(content) {
 function addToFavorites(content, button, event) {
   event.stopPropagation();
   let favorites = JSON.parse(localStorage.getItem('fav_books')) || [];
-  
+
   const isAlreadyFavorite = favorites.some(fav => fav[0] === content[0]);
-  
+
   if (!isAlreadyFavorite) {
     favorites.push(content);
     localStorage.setItem('fav_books', JSON.stringify(favorites));
@@ -209,9 +227,9 @@ function deleteFavorite(event) {
   const index = event.target.dataset.index;
   const favorites = JSON.parse(localStorage.getItem('fav_books')) || [];
   const chosenContent = JSON.parse(localStorage.getItem('chosenContent')) || [];
-  
-  console.log('>>>',favorites[index],chosenContent)
-  if(favorites[index][0] === chosenContent[0]){
+
+  console.log('>>>', favorites[index], chosenContent)
+  if (favorites[index][0] === chosenContent[0]) {
     const btn = document.getElementById('add-to-favorites');
     btn.textContent = 'Add to Favorites';
     btn.classList.remove('fav-button-added');
@@ -259,7 +277,7 @@ function displayRecommendations(recommendedIds) {
     recommendationsWrap.appendChild(noResultsMsg);
     return;
   }
-  
+
   recommendedIds.forEach((id) => {
     const recommendedCard = document.createElement("div");
     recommendedCard.className = "recommended-card";
@@ -312,7 +330,7 @@ function displayRecommendations(recommendedIds) {
     // Add click event listener to each searched-results div
     recommendedCard.addEventListener('click', () => {
       // Store the clicked movie data in localStorage
-      localStorage.setItem('chosenContent', JSON.stringify([book.bookId,book.title,book.language,book.release_date,book.coverImg]));
+      localStorage.setItem('chosenContent', JSON.stringify([book.bookId, book.title, book.language, book.release_date, book.coverImg]));
       // Navigate to the result page
       window.location.href = 'result.html';
     });
