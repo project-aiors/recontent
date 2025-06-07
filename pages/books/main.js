@@ -63,11 +63,11 @@ function updateFavoritesList() {
   favorites.forEach((content, index) => {
     favoritesHTML += `
       <div class="favorite-item" data-index="${index}">
-        <img src="${content.coverImg ? content.coverImg : '../../../assets/book.svg'}" ${!content.coverImg  ? 'style="filter: var(--invert);"' : ''}>
+        <img src="${content[4] ? content[4] : '../../../assets/book.svg'}" ${!content[4]  ? 'style="filter: var(--invert);"' : 'style="height: 38px;"'}>
 
         <div class="favorite-details">
           <div class="favorite-title">${content[1]}</div>
-          <div class="favorite-year">${content[3]}</div>
+          <div class="favorite-year">${content[2] || ''}</div>
         </div>
         <button class="delete-favorite" data-index="${index}">×</button>
       </div>

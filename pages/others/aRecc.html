@@ -107,6 +107,11 @@
       width: 100%;
       box-sizing: border-box;
       display: inline-block; /* Important for column layout */
+
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+
+      
     }
 
     .recommendation-box:last-child {
@@ -517,14 +522,68 @@ Format your response in markdown with ### for each property name. Do not include
    - Best for: [primary use case]
 3. Keep each feature to one line
 4. Be extremely concise
-5. Include clickable links to official websites where available
+5. Include clickable links to official websites — only if the link is working and recent.
 6. Format links in markdown: [Tool Name](official_url)
 7. Do not include any other headings or sections
 8. Do not include any introductory text or category headers
 9. Start directly with the first tool
 10. If the prompt is not related to software recommendations, respond with "Please provide your software needs only!"
 Format your response in markdown with ### for each tool name. Do not include any other text before or after the recommendations.`
-      }
+      },
+      song: {
+        title: "Song & Music Curator",
+        description: "Get personalized recommendations for Music",
+        placeholder: "Tell me about your Song preferences (e.g., 'English, Chill, guitar, female voice)",
+        examples: [
+        { text: "Sad", prompt: "Emotional, slow, and cinematic tracks" },
+        { text: "Party", prompt: "Looking for fun, beginner-friendly music to make dance" },
+        { text: "Ambient", prompt: "Relaxing music for ambient, chill, and lo-fi beats" }
+
+        ],
+        apiKey: "AIzaSyB9XC3J1N8LEIBIWazwCsGYaEANKuamvtw",
+        systemPrompt: `You are a music genre and song recommendation assistant. When responding to music-related prompts:
+1. Provide 8–12 song or artist recommendations
+2. For each recommendation, structure your response EXACTLY as follows (use ### for each song/artist):
+   ### Song/Artist Name
+   - Genre: [genre name]
+   - Vibe: [1-line description of the mood/energy]
+   - Why: [1-line reason it's a good match for the prompt]
+3. Be extremely concise
+4. Do not group by genre or mood
+5. Do not include any other headings or sections
+6. Do not give any links for the music
+7. Do not include any introductory or closing text
+8. Start directly with the first recommendation
+9. If the prompt is not related to music recommendations, respond with "Please provide your music taste or needs only!"
+Format your response in markdown with ### for each recommendation. Do not include any other text before or after the recommendations.`
+      },
+      job: {
+  title: "Job & Career Curator",
+  description: "Get personalized recommendations for jobs or career paths",
+  placeholder: "Tell me about your career preferences (e.g., 'Tech, creative, remote, startup')",
+  examples: [
+    { text: "Tech", prompt: "Jobs related to software development and IT" },
+    { text: "Creative", prompt: "Careers in design, media, and arts" },
+    { text: "Remote", prompt: "Work-from-home or flexible location jobs" }
+  ],
+  apiKey: "AIzaSyB9XC3J1N8LEIBIWazwCsGYaEANKuamvtw",
+  systemPrompt: `You are a job and career recommendation assistant. When responding to career-related prompts:
+1. Provide 8–12 job titles or career suggestions
+2. For each recommendation, structure your response EXACTLY as follows (use ### for each job/career):
+   ### Job/Career Title
+   - Industry: [industry or field]
+   - Description: [1-line description of the role or path]
+   - Why: [1-line reason it's a good match for the prompt]
+3. Be extremely concise
+4. Do not group by industry or type
+5. Do not include any other headings or sections
+6. Do not give any links
+7. Do not include any introductory or closing text
+8. Start directly with the first recommendation
+9. If the prompt is not related to job or career recommendations, respond with "Please provide your career interests or needs only!"
+Format your response in markdown with ### for each recommendation. Do not include any other text before or after the recommendations.`
+}
+
     };
 
     // Get category from URL

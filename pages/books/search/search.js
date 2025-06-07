@@ -1,6 +1,4 @@
 const contentSuggestions = [
-  "English",
-  "Bengali",
   "Horror",
   "Adventure",
   "Comedy",
