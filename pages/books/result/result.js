@@ -164,49 +164,178 @@ function deleteFavorite(event) {
 }
 
 
+// async function getRecommendations(bookTitle) {
+//   recommendationsWrap.innerHTML = '<h4 style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; grid-column: 1 / -1;">Loading...</h4>';
+//   try {
+//     const response = await fetch(config.backendBooks, {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify({ query: bookTitle }), //'query' is expected in backend
+//       // body: JSON.stringify({ query: "bengoli" }),
+
+//     });
+
+//     if (!response.ok) {
+//       throw new Error(`HTTP error! status: ${response.status}`);
+//     }
+
+//     const data = await response.json();
+//     console.log('data ', data)
+//     // const recommendedIds = data.recommended_movie_ids;
+//     const recommendedIds = data.results;
+//     console.log('recommendedIds ', recommendedIds)
+
+//     // displayRecommendations(recommendedIds);
+//     // displayRecommendations(recommendedIds); //any of recommendedIds.bookId !== chosenContent.bookId
+//     const chosenContent = JSON.parse(localStorage.getItem('chosenContent'));
+//     const filteredRecommendations = recommendedIds
+//       .filter(item => item.bookId !== chosenContent[0])
+//       .slice(0, 14);
+
+//     displayRecommendations(filteredRecommendations);
+
+
+
+//     return recommendedIds;
+//   } catch (error) {
+//     console.error('Error:', error);
+//     throw error;
+//   }
+// }
+
+
+
+// async function getRecommendations(bookTitle) {
+//   recommendationsWrap.innerHTML = '<h4 style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; grid-column: 1 / -1;">Loading...</h4>';
+
+//   try {
+//     const chosenContent = JSON.parse(localStorage.getItem('chosenContent'));
+//     const chosenBook = dataCSV.find(book => book.bookId === chosenContent[0]);
+
+//     if (!chosenBook) {
+//       console.error('Chosen book not found in CSV');
+//       displayRecommendations([]);
+//       return;
+//     }
+
+//     const titleLower = String(chosenBook.title || "").toLowerCase();
+//     const chosenGenres = String(chosenBook.genres || "")
+//       .split(',')
+//       .map(g => g.trim().toLowerCase())
+//       .filter(g => g.length > 0);
+
+//     const scoredBooks = dataCSV
+//       .filter(book => book.bookId !== chosenBook.bookId)
+//       .map(book => {
+//         const bookTitle = String(book.title || "").toLowerCase();
+//         const bookGenres = String(book.genres || "")
+//           .split(',')
+//           .map(g => g.trim().toLowerCase())
+//           .filter(g => g.length > 0);
+
+//         let score = 0;
+
+//         // Genre match score
+//         bookGenres.forEach(g => {
+//           if (chosenGenres.includes(g)) score++;
+//         });
+
+//         // Title similarity score
+//         if (bookTitle.includes(titleLower) || titleLower.includes(bookTitle)) {
+//           score++;
+//         }
+
+//         return { ...book, _score: score };
+//       })
+//       .filter(book => book._score > 0)
+//       .sort((a, b) => b._score - a._score)
+//       .slice(0, 14);
+
+//     displayRecommendations(scoredBooks);
+//     return scoredBooks;
+
+//   } catch (error) {
+//     console.error('Error:', error);
+//     displayRecommendations([]);
+//     return [];
+//   }
+// }
+
+function shuffleArray(arr) {
+  return arr.map(v => ({ v, sort: Math.random() }))
+            .sort((a, b) => a.sort - b.sort)
+            .map(({ v }) => v);
+}
+
 async function getRecommendations(bookTitle) {
   recommendationsWrap.innerHTML = '<h4 style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; grid-column: 1 / -1;">Loading...</h4>';
+
   try {
-    const response = await fetch(config.backendBooks, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ query: bookTitle }), //'query' is expected in backend
-      // body: JSON.stringify({ query: "bengoli" }),
+    const chosenContent = JSON.parse(localStorage.getItem('chosenContent'));
+    const chosenBook = dataCSV.find(book => book.bookId === chosenContent[0]);
 
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    if (!chosenBook) {
+      console.error('Chosen book not found in CSV');
+      displayRecommendations([]);
+      return;
     }
 
-    const data = await response.json();
-    console.log('data ', data)
-    // const recommendedIds = data.recommended_movie_ids;
-    const recommendedIds = data.results;
-    console.log('recommendedIds ', recommendedIds)
+    const titleLower = String(chosenBook.title || "").toLowerCase();
+    const chosenGenres = String(chosenBook.genres || "")
+      .split(',')
+      .map(g => g.trim().toLowerCase())
+      .filter(g => g.length > 0);
 
-    // displayRecommendations(recommendedIds);
-    // displayRecommendations(recommendedIds); //any of recommendedIds.bookId !== chosenContent.bookId
-    const chosenContent = JSON.parse(localStorage.getItem('chosenContent'));
-    const filteredRecommendations = recommendedIds
-      .filter(item => item.bookId !== chosenContent[0])
-      .slice(0, 14);
+    let scoredBooks = dataCSV
+      .filter(book => book.bookId !== chosenBook.bookId)
+      .map(book => {
+        const bookTitle = String(book.title || "").toLowerCase();
+        const bookGenres = String(book.genres || "")
+          .split(',')
+          .map(g => g.trim().toLowerCase())
+          .filter(g => g.length > 0);
 
-    displayRecommendations(filteredRecommendations);
+        let score = 0;
 
+        bookGenres.forEach(g => {
+          if (chosenGenres.includes(g)) {
+            score += 1;
+            if (Math.random() < 0.2) score += 1; // random bonus
+          }
+        });
 
-    return recommendedIds;
+        if (bookTitle.includes(titleLower) || titleLower.includes(bookTitle)) {
+          score += 1;
+        }
+
+        return { ...book, _score: score };
+      })
+      .filter(book => book._score > 0)
+      .sort((a, b) => b._score - a._score);
+
+    const finalRecs = shuffleArray(scoredBooks.slice(0, 20)).slice(0, 14);
+
+    // ⏱ 3 sec delay
+    setTimeout(() => {
+      displayRecommendations(finalRecs);
+    }, 3000);
+
+    return finalRecs;
+
   } catch (error) {
     console.error('Error:', error);
-    throw error;
+    displayRecommendations([]);
+    return [];
   }
 }
 
 
+
+
+
 function displayRecommendations(recommended_books) {
-  console.log('reccmIds: ', recommended_books)
   recommendationsWrap.innerHTML = "";
 
   if (recommended_books.length === 0) {
@@ -259,6 +388,8 @@ function displayRecommendations(recommended_books) {
     });
   });
 }
+
+
 
 
 fetch("../search/books.csv")

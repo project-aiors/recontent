@@ -3,7 +3,8 @@ const config = {
     ytApiKey : ["AkIzaSyAV6-iVSy3e4h_8mimjZxWe5YfOJa9nLi8a","AcIzaSyCsE7qfpVLiKFYPZkBdgE2WdzwD6ldQUQMe","ANIzaSyCCQ3P8v0GGTKKYokZ5GCCDbD1mzwXOLSkr","AAIzaSyCZpwJmbEZtv1g_AyCZMaM99880AGrpn1Ub","ArIzaSyAUD-YQKEjCw3JuZ_2K1ck_CwwBga5ilF4i","AbIzaSyCw8r0dgxvC-Op5rTUkTQBVzN3N68sOnXQr","ARIzaSyDcZ4DMM-GrRQt4JHIhhDQENNIlzHSFHrkR","AIIzaSyBgwUI5yUVfZjAhUp5naxeqcHDwFeoHkIc2","AaIzaSyADzGW0StWhCJZdWk3QA3pg73leppLmg1os","AAIzaSyDFHIZot-B0MXLIs7oFqpW7zD55kenJTSAa","AoIzaSyD3eAB7aUmJiW2n9HEGbLsEve4wWRSeXRoa","AEIzaSyD8n1BzeCbrH58bZ2Q3niBtS2Yv9WgalYo3","AiIzaSyC4Ja1Heujs9Isp9BgE4LMfKAoAdq8m-Qst","ACIzaSyC4z_HtHWyw4mfq9BXoWfaVqmkyrUSI0ywX","AVIzaSyDttmTKIihCailgTiNtiuqATZX0mlJi4O8v"],
     backend : "https://recontent-backend.onrender.com/recommend",
     // backendBooks: "http://127.0.0.1:5000",
-    backendBooks: "http://127.0.0.1:5000/recommend_books",
+    // backendBooks: "http://127.0.0.1:5000/recommend_books",
+    backendBooks: "https://recontent-backend-book.onrender.com",
     
 };
 
